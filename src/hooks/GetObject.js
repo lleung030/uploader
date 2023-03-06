@@ -3,7 +3,7 @@ import * as AWS from "aws-sdk";
 const BucketList = (bucketName) => {
   AWS.config.update({
     accessKeyId: "AKIA3M7HW3KNJAOFM5VF",
-    secretAccessKey: "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",
+    secretAccessKey: process.env.REACT_APP_S3_SECRET_ACCESS_KEY,
     region: "us-west-1",
   });
   // Create the parameters for calling listObjects
