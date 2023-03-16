@@ -3,7 +3,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { APP_NAME } from "./utils/AppConstant";
 import UploadFeature from "./features/upload";
-import Tabs from "./components/Tabs";
 import Table from "./components/Table";
 
 function App() {
