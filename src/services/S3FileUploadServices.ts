@@ -4,6 +4,7 @@ import cuid from 'cuid';
 
 import { IQueueFileProcessing } from '../hooks/useQueueFileProcessing';
 import { CHUNK_SIZE } from '../utils/AppConstant';
+import AWS from 'aws-sdk';
 
 export class S3FileUploadService {
   s3Client: S3;
@@ -32,7 +33,7 @@ export class S3FileUploadService {
       signatureVersion: 'v4',
     });
 
-    this.bucketName = process.env.REACT_APP_S3_BUCKET_NAME!;
+    this.bucketName = 'nct.northcreek';
 
     this.item = options?.item;
     this.uploadId = '';
@@ -55,13 +56,13 @@ export class S3FileUploadService {
     this.initUpload();
   }
 
+
   // Initiate a multipart upload request
   async initUpload() {
     try {
       // test/
-      const Key = `${cuid()}.${this.item?.fileExtension}`;
+      const Key = `new_uploads/${this.item.fileName}${this.item.fileExtension}`;//${cuid()}.${this.item?.fileExtension}
       const Bucket = this.bucketName;
-
       const initResp: any = await this.s3Client.createMultipartUpload({ Bucket, Key }).promise();
       this.uploadId = initResp.UploadId;
       this.uploadKey = initResp.Key;
@@ -73,6 +74,8 @@ export class S3FileUploadService {
     }
   }
 
+  
+
   // Create pre-signed URLs for each part
   async getSignedUrls() {
     try {
@@ -80,7 +83,7 @@ export class S3FileUploadService {
       const Key = this.uploadKey;
       const UploadId = this.uploadId;
       const numberOfParts = this.numberOfParts;
-      const promises = [];
+      const promises : any[] = [];
 
       for (let i = 0; i < numberOfParts; i++) {
         promises.push(this.s3Client.getSignedUrlPromise('uploadPart', { Bucket, Key, UploadId, PartNumber: i + 1 }));
